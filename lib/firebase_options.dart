@@ -85,4 +85,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'inventory-app-bplpriya.firebasestorage.app',
     measurementId: 'G-CB7BMD19Q4',
   );
+
 }
