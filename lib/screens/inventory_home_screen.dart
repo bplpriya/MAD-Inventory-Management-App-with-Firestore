@@ -1,9 +1,11 @@
-// lib/screens/inventory_home_screen.dart
+// lib/screens/inventory_home_screen.dart (UPDATED)
 
 import 'package:flutter/material.dart';
 import '../models/item.dart';
 import '../services/firestore_service.dart';
 import 'add_edit_item_screen.dart';
+// Import the new dashboard screen
+import 'insights_dashboard_screen.dart'; 
 
 final FirestoreService _firestoreService = FirestoreService();
 
@@ -14,16 +16,15 @@ class InventoryHomePage extends StatefulWidget {
 
 class _InventoryHomePageState extends State<InventoryHomePage> {
   String? _searchTerm;
-  String? _categoryFilter = 'All'; // Default filter value
+  String? _categoryFilter = 'All'; 
   final TextEditingController _searchController = TextEditingController();
 
-  // Hardcoded categories for filter chips (you can fetch these dynamically later)
+  // Ensure these categories match your Firestore data (now corrected!)
   final List<String> _categories = ['All', 'Electronics', 'Apparel', 'Food', 'Misc'];
 
   @override
   void initState() {
     super.initState();
-    // Listen to search field changes to trigger stream rebuild
     _searchController.addListener(_onSearchChanged);
   }
 
@@ -45,6 +46,18 @@ class _InventoryHomePageState extends State<InventoryHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Inventory Home Page'),
+        actions: [
+          // 📊 NEW: Navigation button to the Dashboard
+          IconButton(
+            icon: Icon(Icons.analytics),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => InsightsDashboardScreen()),
+              );
+            },
+          ),
+        ],
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(100.0),
           child: Column(
@@ -98,6 +111,7 @@ class _InventoryHomePageState extends State<InventoryHomePage> {
           categoryFilter: _categoryFilter,
         ),
         builder: (context, snapshot) {
+          // (List display logic remains the same)
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
@@ -116,7 +130,6 @@ class _InventoryHomePageState extends State<InventoryHomePage> {
             itemBuilder: (context, index) {
               final item = items[index];
               
-              // (Keep the existing Dismissible/ListTile code for display/edit/delete)
               return Dismissible(
                 key: Key(item.id!),
                 direction: DismissDirection.endToStart,
